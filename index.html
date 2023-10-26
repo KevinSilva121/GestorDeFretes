@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>Gestão de transporte</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, intial-scale=1.0" />
+    <style>
+      #map {
+        width: 50%;
+        height: 350px;
+        margin-bottom: 10px;
+        
+
+      }
+      #form button {
+        background-color: rgb(0, 0, 0);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      
+  body {
+    
+    background-image: url(.vscode/contate-nos-artrans-transportes-logistica.jpg);
+    background-size: cover;
+  background-color: gray;
+  font-family: Arial, sans-serif;
+  color: black;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  justify-content: center;
+  
+  
+  height: 100vh;
+  }
+
+
+
+
+h1 {
+  color: rgb(27, 26, 26); /* Tornando o vermelho do título mais escuro */
+  text-align: left;
+  text-align: top; /* Alinhando o título à esquerda */
+
+  padding: 20px;
+  margin: 0;
+  vertical-align: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  
+  
+  
+}
+
+
+#h1 img{
+    width: 100px;
+    height: 100px;
+    vertical-align: left,top,center;
+    
+}
+
+
+
+
+#form {
+  background-color: #8e8f91;
+  color: white;
+  border-radius: 5px;
+  margin: 30px;
+  padding: 10px;
+  opacity:95%;
+  max-width: 500px;
+  margin-left: left;
+  margin-right: auto;
+  align-items: center;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: white;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+button {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: darkred;
+}
+
+#resultado {
+  margin: 20px;
+  padding: 10px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+  border-radius: 10px;
+  opacity: 0;
+}
+    </style>
+  </head>
+  <h1 class="h1titulo" id="h1titulo">Gestão de transportes 
+    AR Transportes</h1>
+  
+  <body>
+    <h1>
+
+    </h1>
+    
+    <div id="map"></div>
+    <form id="form">
+      <label for="origem">Origem:</label>
+      <input type="text" id="origem" name="origem" /> <br /><br />
+      <label for="destino">Destino:</label>
+      <input type="text" id="destino" name="destino" /><br /><br />
+
+      <label for="consumo">Média de consumo de combustível (km/l):</label>
+      <input
+        type="number"
+        id="consumo"
+        name="consumo"
+        step="any"
+        min="0"
+      /><br /><br />
+
+      <label for="preco">Preço do combustível (R$/l):</label>
+      <input
+        type="number"
+        id="preco"
+        name="preco"
+        step="any"
+        min="0"
+      /><br /><br />
+      <button type="button" onclick="calcular()">Calcular</button>
+    </form>
+    <div id="resultado"></div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=CHAVE-DA-API"></script>
+    <script>
+      var origemMarker = null;
+      var destinoMarker = null;
+      var map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -23.5505, lng: -46.6333 },
+        zoom: 12,
+      });
+
+      var directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+      });
+
+      map.addListener("click", function (event) {
+        if (origemMarker == null) {
+          origemMarker = new google.maps.Marker({
+            position: event.latLng,
+            map: map,
+          });
+          document.getElementById("origem").value =
+            event.latLng.lat() + ", " + event.latLng.lng();
+        } else if (destinoMarker == null) {
+          destinoMarker = new google.maps.Marker({
+            position: event.latLng,
+            map: map,
+          });
+          document.getElementById("destino").value =
+            event.latLng.lat() + ", " + event.latLng.lng();
+          var directionsService = new google.maps.DirectionsService();
+          var request = {
+            origin: document.getElementById("origem").value,
+            destination: document.getElementById("destino").value,
+            travelMode: "DRIVING",
+          };
+
+          directionsService.route(request, function (result, status) {
+            if (status == "OK") {
+              directionsRenderer.setDirections(result);
+            } else {
+              alert("Não foi possível calcular a rota.");
+            }
+          });
+        } else {
+          origemMarker.setMap(null);
+          destinoMarker.setMap(null);
+          origemMarker = new google.maps.Marker({
+            position: event.latLng,
+            map: map,
+          });
+          destinoMarker = null;
+          document.getElementById("origem").value =
+            event.latLng.lat() + ", " + event.latLng.lng();
+          document.getElementById("destino").value = "";
+          directionsRenderer.set("directions", null);
+        }
+      });
+      function calcular() {
+        var origem = document.getElementById("origem").value;
+        var destino = document.getElementById("destino").value;
+        var consumo = document.getElementById("consumo").value;
+        var preco = document.getElementById("preco").value;
+
+        if (origem == "" || destino == "" || consumo == "" || preco == "") {
+          alert("Por favor, preencha todos os campos.");
+        } else {
+          var directionsService = new google.maps.DirectionsService();
+          var request = {
+            origin: origem,
+            destination: destino,
+            travelMode: "DRIVING",
+          };
+
+          directionsService.route(request, function (result, status) {
+            if (status == "OK") {
+              directionsRenderer.setDirections(result);
+
+              var distancia = result.routes[0].legs[0].distance.value / 1000;
+              var consumoCombustivel = distancia / consumo;
+              var valor1 = distancia*4 
+              var valor3 = distancia*6
+              
+              var valorCombustivel = consumoCombustivel * preco;
+
+              // Abrir nova janela com os resultados
+              var url = "resultado.html";
+              url += "?distancia=" + distancia.toFixed(2);
+              url += "&consumo=" + valor1.toFixed(2);
+              url += "&consumo3=" + (valor3).toFixed(2);
+              
+              url += "&valor=" + valorCombustivel.toFixed(2);
+              window.open(url, "_blank");
+            } else {
+              alert("Não foi possível calcular a rota.");
+            }
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

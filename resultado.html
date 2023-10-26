@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Resultados da gestão de transporte</title>
+    <style>
+        button#btn-voltar {
+        background-color: rgb(0, 0, 0);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+      #resultados {
+        margin-left: 50px;
+      }
+      body {
+  background-color: gray;
+  background-image: url(.vscode/contate-nos-artrans-transportes-logistica.jpg);
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  color: rgb(0, 0, 0);
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  opacity: 95%;
+}
+
+h1 {
+  color: rgb(24, 24, 24); /* Tornando o vermelho do título mais escuro */
+  text-align: center; /* Alinhando o título à esquerda */
+  padding: 20px;
+  margin: 0;
+}
+
+#resultados {
+  background-color: #8e8f91; /* Fundo azul escuro */
+  color: white;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 10px;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  margin: 10px 0;
+}
+
+span {
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
+
+button {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: darkred;
+}
+      
+    </style>
+  </head>
+  <body >
+    
+    <h1>Resultados do Calculo de Transporte</h1>
+    <div id="resultados">
+      <p>Distancia percorrida: <span style="font-weight: bold; color: rgb(255, 255, 255);"id="distancia"></span> km</p>
+      <p>Valor a ser Pago de Fiorino: <span style="font-weight: bold; color: rgb(255, 255, 255);"id="consumo"></span> reais</p>
+      <p>Valor a ser Pago de Van: <span style="font-weight: bold; color: rgb(255, 255, 255);"id="consumo3"></span> reais</p>
+      
+      <p>Valor gasto com combustivel: R$<span style="font-weight: bold; color: rgb(255, 255, 255);" id="valor"></span></p>
+      <button type="button" onclick="window.location.href='index.html'" id="btn-voltar">Voltar</button>
+
+    </div>
+
+    <script>
+      
+      // Obter parâmetros da URL
+      var urlParams = new URLSearchParams(window.location.search);
+
+      // Exibir resultados na página
+      document.getElementById("distancia").textContent = urlParams.get("distancia");
+      document.getElementById("consumo").textContent = urlParams.get("consumo");
+      document.getElementById("consumo3").textContent = urlParams.get("consumo3");
+      
+      document.getElementById("valor").textContent = urlParams.get("valor");
+    </script>
+  </body>
+</html>
+
